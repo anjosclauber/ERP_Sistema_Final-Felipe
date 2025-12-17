@@ -1,65 +1,68 @@
+
+# ================== Cadastro de Cliente (Novo Layout) ====================
 import customtkinter as ctk
-from tkinter import messagebox, ttk
+from tkinter import ttk, messagebox
 from PIL import Image
 import os
 from db import conectar
 
-
-# ================== Cadastro de Cliente ====================
 def cadastro_cliente(frame_conteudo, dados=None, on_show_small_logo=None, on_show_big_logo=None):
     for widget in frame_conteudo.winfo_children():
         widget.destroy()
 
-    frame_conteudo.grid_propagate(False)
-    frame_conteudo.configure(fg_color="#d9d9d9")
+    frame_conteudo.configure(fg_color="#e1f1fd")
 
-    # ---------- título ----------
-    titulo = ctk.CTkLabel(
+    main_frame = ctk.CTkFrame(
         frame_conteudo,
-        text="Cadastro de Cliente",
-        font=("Arial", 28, "bold")
+        fg_color="#eaf6ff",
+        border_color="#1976d2",
+        border_width=2,
+        width=1000,
+        height=650,
     )
-    titulo.place(relx=0.559, rely=0.1, anchor="center")
+    main_frame.place(relx=0.5, rely=0.5, anchor="center")
 
-    frame_central = ctk.CTkFrame(frame_conteudo, fg_color="transparent")
-    frame_central.place(relx=0.5, rely=0.5, anchor="center")
 
-    # -------- imagem --------
-    frame_img = ctk.CTkFrame(frame_central, fg_color="transparent")
-    frame_img.grid(row=0, column=0, padx=(20, 40), pady=10, sticky="n")
-    try:
-        diretorio_base = os.path.dirname(os.path.abspath(__file__))
-        caminho_img = os.path.join(diretorio_base, "imagens", "cliente.png")
-        img = ctk.CTkImage(light_image=Image.open(caminho_img), size=(200, 200))
-        lbl_img = ctk.CTkLabel(frame_img, image=img, text="")
-        lbl_img.pack()
-    except:
-        lbl_img = ctk.CTkLabel(frame_img, text="(Imagem)", width=200, height=200)
-        lbl_img.pack()
+    ctk.CTkLabel(
+        main_frame,
+        text="Cadastro de Cliente",
+        font=("Arial", 32, "bold"),
+        text_color="#1976d2",
+    ).place(relx=0.5, y=70, anchor="center")
 
-    # -------- formulário --------
-    frame_form = ctk.CTkFrame(frame_central, fg_color="transparent")
-    frame_form.grid(row=0, column=1, pady=10, sticky="n")
+    # Centralizar tudo dentro do main_frame (borda azul)
+    form_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
+    form_frame.place(relx=0.5, rely=0.5, anchor="center")
 
-    entry_nome = ctk.CTkEntry(frame_form, placeholder_text="Nome", width=320)
-    entry_nome.grid(row=0, column=0, pady=6, sticky="ew")
+    # Nome e CPF
+    ctk.CTkLabel(form_frame, text="Nome", font=("Arial", 16, "bold"), text_color="#1976d2").grid(row=0, column=0, sticky="w", padx=(0,10), pady=(0,2))
+    entry_nome = ctk.CTkEntry(form_frame, width=350, height=28, placeholder_text="Digite o nome")
+    entry_nome.grid(row=1, column=0, sticky="w", padx=(0,10), pady=(0,10))
+    ctk.CTkLabel(form_frame, text="CPF", font=("Arial", 16, "bold"), text_color="#1976d2").grid(row=0, column=1, sticky="w", padx=(0,10), pady=(0,2))
+    entry_cpf = ctk.CTkEntry(form_frame, width=220, height=28, placeholder_text="CPF")
+    entry_cpf.grid(row=1, column=1, sticky="w", padx=(0,10), pady=(0,10))
 
-    entry_cpf = ctk.CTkEntry(frame_form, placeholder_text="CPF", width=320)
-    entry_cpf.grid(row=1, column=0, pady=6, sticky="ew")
+    # Endereço e Complemento
+    ctk.CTkLabel(form_frame, text="Endereço", font=("Arial", 16, "bold"), text_color="#1976d2").grid(row=2, column=0, sticky="w", padx=(0,10), pady=(0,2))
+    entry_endereco = ctk.CTkEntry(form_frame, width=350, height=28, placeholder_text="Endereço")
+    entry_endereco.grid(row=3, column=0, sticky="w", padx=(0,10), pady=(0,10))
+    ctk.CTkLabel(form_frame, text="Complemento", font=("Arial", 16, "bold"), text_color="#1976d2").grid(row=2, column=1, sticky="w", padx=(0,10), pady=(0,2))
+    entry_complemento = ctk.CTkEntry(form_frame, width=220, height=28, placeholder_text="Complemento")
+    entry_complemento.grid(row=3, column=1, sticky="w", padx=(0,10), pady=(0,10))
 
-    entry_telefone = ctk.CTkEntry(frame_form, placeholder_text="Telefone", width=320)
-    entry_telefone.grid(row=2, column=0, pady=6, sticky="ew")
+    # Bairro, Telefone, Cidade
+    ctk.CTkLabel(form_frame, text="Bairro", font=("Arial", 16, "bold"), text_color="#1976d2").grid(row=4, column=0, sticky="w", padx=(0,10), pady=(0,2))
+    entry_bairro = ctk.CTkEntry(form_frame, width=180, height=28, placeholder_text="Bairro")
+    entry_bairro.grid(row=5, column=0, sticky="w", padx=(0,10), pady=(0,10))
+    ctk.CTkLabel(form_frame, text="Telefone", font=("Arial", 16, "bold"), text_color="#1976d2").grid(row=4, column=1, sticky="w", padx=(0,10), pady=(0,2))
+    entry_telefone = ctk.CTkEntry(form_frame, width=180, height=28, placeholder_text="Telefone")
+    entry_telefone.grid(row=5, column=1, sticky="w", padx=(0,10), pady=(0,10))
+    ctk.CTkLabel(form_frame, text="Cidade", font=("Arial", 16, "bold"), text_color="#1976d2").grid(row=4, column=2, sticky="w", padx=(0,10), pady=(0,2))
+    entry_cidade = ctk.CTkEntry(form_frame, width=180, height=28, placeholder_text="Cidade")
+    entry_cidade.grid(row=5, column=2, sticky="w", padx=(0,10), pady=(0,10))
 
-    entry_endereco = ctk.CTkEntry(frame_form, placeholder_text="Endereço", width=320)
-    entry_endereco.grid(row=3, column=0, pady=6, sticky="ew")
-
-    entry_bairro = ctk.CTkEntry(frame_form, placeholder_text="Bairro", width=320)
-    entry_bairro.grid(row=4, column=0, pady=6, sticky="ew")
-
-    entry_cidade = ctk.CTkEntry(frame_form, placeholder_text="Cidade", width=320)
-    entry_cidade.grid(row=5, column=0, pady=6, sticky="ew")
-
-    # -------- Combobox Estado --------
+    # Estado e Email
+    ctk.CTkLabel(form_frame, text="Estado", font=("Arial", 16, "bold"), text_color="#1976d2").grid(row=6, column=0, sticky="w", padx=(0,10), pady=(0,2))
     try:
         con = conectar()
         cur = con.cursor()
@@ -69,19 +72,17 @@ def cadastro_cliente(frame_conteudo, dados=None, on_show_small_logo=None, on_sho
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao carregar estados:\n{e}")
         estados = []
-
     estados_formatados = [f"{nome} | {sigla}" for nome, sigla in estados]
-    combobox_estado = ttk.Combobox(frame_form, values=estados_formatados, width=38, font=("Arial", 14))
-    combobox_estado.grid(row=6, column=0, pady=6, sticky="ew")
+    combobox_estado = ttk.Combobox(form_frame, values=estados_formatados, width=20, font=("Arial", 14))
+    combobox_estado.grid(row=7, column=0, sticky="w", padx=(0,10), pady=(0,10))
     combobox_estado.set("Selecione o Estado")
 
-    entry_email = ctk.CTkEntry(frame_form, placeholder_text="Email", width=320)
-    entry_email.grid(row=7, column=0, pady=6, sticky="ew")
+    ctk.CTkLabel(form_frame, text="Email", font=("Arial", 16, "bold"), text_color="#1976d2").grid(row=6, column=1, sticky="w", padx=(0,10), pady=(0,2))
+    entry_email = ctk.CTkEntry(form_frame, width=370, height=28, placeholder_text="Email")
+    entry_email.grid(row=7, column=1, columnspan=2, sticky="w", padx=(0,10), pady=(0,10))
 
     # Variável de controle para edição
     cliente_id = None
-
-    # Preenche dados se for edição
     if dados:
         cliente_id = dados.get("id", None)
         entry_nome.insert(0, dados.get("nome", ""))
@@ -96,7 +97,32 @@ def cadastro_cliente(frame_conteudo, dados=None, on_show_small_logo=None, on_sho
             combobox_estado.set(matches[0] if matches else estado_valor)
         entry_email.insert(0, dados.get("email", ""))
 
-    # ================= FUNÇÕES =================
+    # ====== BOTÕES (rodapé) ======
+    def pack_button(text, cmd, color, xpos, hover_color="#0b60c9", width=None, height=None):
+        btn = ctk.CTkButton(
+            main_frame,
+            text=text,
+            width=width if width is not None else 110,
+            height=height if height is not None else 28,
+            fg_color=color,
+            hover_color=hover_color,
+            font=("Arial", 14, "bold"),
+            command=cmd,
+        )
+        btn.place(x=xpos, y=380)
+
+    def limpar():
+        nonlocal cliente_id
+        cliente_id = None
+        entry_nome.delete(0, "end")
+        entry_cpf.delete(0, "end")
+        entry_telefone.delete(0, "end")
+        entry_endereco.delete(0, "end")
+        entry_bairro.delete(0, "end")
+        entry_cidade.delete(0, "end")
+        combobox_estado.set("Selecione o Estado")
+        entry_email.delete(0, "end")
+
     def gravar():
         nonlocal cliente_id
         nome = entry_nome.get().strip()
@@ -107,19 +133,15 @@ def cadastro_cliente(frame_conteudo, dados=None, on_show_small_logo=None, on_sho
         cidade = entry_cidade.get().strip()
         estado_completo = combobox_estado.get()
         email = entry_email.get().strip()
-
         if not nome or not cpf:
             messagebox.showwarning("Aviso", "Preencha pelo menos Nome e CPF!")
             return
-
         estado = ""
         if " | " in estado_completo:
             estado = estado_completo.split(" | ")[1]
-
         try:
             con = conectar()
             cur = con.cursor()
-
             if cliente_id:
                 cur.execute("""
                     UPDATE cliente
@@ -138,57 +160,34 @@ def cadastro_cliente(frame_conteudo, dados=None, on_show_small_logo=None, on_sho
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """, (nome, cpf, telefone, endereco, bairro, cidade, estado, email))
                 messagebox.showinfo("Sucesso", f"Cliente '{nome}' cadastrado com sucesso!")
-
             con.commit()
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao gravar cliente:\n{e}")
         finally:
             con.close()
-
         limpar()
 
     def procurar():
+        from cad_cliente import abrir_tela_procurar_cliente
         abrir_tela_procurar_cliente(
             frame_conteudo,
             on_show_small_logo=on_show_small_logo,
             on_show_big_logo=on_show_big_logo
         )
 
-    def limpar():
-        nonlocal cliente_id
-        cliente_id = None
-        entry_nome.delete(0, "end")
-        entry_cpf.delete(0, "end")
-        entry_telefone.delete(0, "end")
-        entry_endereco.delete(0, "end")
-        entry_bairro.delete(0, "end")
-        entry_cidade.delete(0, "end")
-        combobox_estado.set("Selecione o Estado")
-        entry_email.delete(0, "end")
-
     def sair():
         for widget in frame_conteudo.winfo_children():
             widget.destroy()
 
-    # -------- botões --------
-    frame_botoes = ctk.CTkFrame(frame_form, fg_color="transparent")
-    frame_botoes.grid(row=8, column=0, pady=(50, 20))
-
-    btn_gravar = ctk.CTkButton(frame_botoes, text="Gravar", width=120, command=gravar,
-                               fg_color="#2e8bff", hover_color="#1c5fb8")
-    btn_gravar.grid(row=0, column=0, padx=8)
-
-    btn_procurar = ctk.CTkButton(frame_botoes, text="Procurar", width=120, command=procurar,
-                                 fg_color="#2e8bff", hover_color="#1c5fb8")
-    btn_procurar.grid(row=0, column=1, padx=8)
-
-    btn_limpar = ctk.CTkButton(frame_botoes, text="Limpar", width=120, command=limpar,
-                               fg_color="#2e8bff", hover_color="#1c5fb8")
-    btn_limpar.grid(row=0, column=2, padx=8)
-
-    btn_sair = ctk.CTkButton(frame_botoes, text="Sair", width=120, command=sair,
-                             fg_color="red", hover_color="#cc0000")
-    btn_sair.grid(row=0, column=3, padx=8)
+    # ====== BOTÕES ======
+    # Botões alinhados com espaçamento de 30
+    # Botões centralizados abaixo do formulário
+    btn_x = 0
+    btn_y = 380
+    pack_button("Gravar", gravar, "#1f80ff", btn_x)
+    pack_button("Procurar", procurar, "#1f80ff", btn_x + 140)
+    pack_button("Limpar", limpar, "#1f80ff", btn_x + 280)
+    pack_button("Sair", sair, "#e53935", btn_x + 420, hover_color="#cc0000")
 
 
 # ================= TELA PROCURAR CLIENTE =================

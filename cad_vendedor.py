@@ -23,48 +23,101 @@ def cadastro_vendedor(frame_conteudo, dados=None, on_show_small_logo=None, on_sh
             pass
 
     frame_conteudo.grid_propagate(False)
-    frame_conteudo.configure(fg_color="#d9d9d9")
+    frame_conteudo.configure(fg_color="#e1f1fd")
 
-    titulo = ctk.CTkLabel(
+    main_frame = ctk.CTkFrame(
         frame_conteudo,
-        text="Cadastro de Vendedor",
-        font=("Arial", 28, "bold")
+        fg_color="#eaf6ff",
+        border_color="#1976d2",
+        border_width=2,
+        width=800,
+        height=400,
     )
-    titulo.place(relx=0.56, rely=0.32, anchor="center")
+    main_frame.place(relx=0.5, rely=0.5, anchor="center")
 
-    frame_central = ctk.CTkFrame(frame_conteudo, fg_color="transparent")
-    frame_central.place(relx=0.5, rely=0.5, anchor="center")
+    ctk.CTkLabel(
+        main_frame,
+        text="Cadastro de Vendedor",
+        font=("Arial", 28, "bold"),
+        text_color="#1976D2"
+    ).place(relx=0.5, y=40, anchor="center")
 
-    frame_img = ctk.CTkFrame(frame_central, fg_color="transparent")
-    frame_img.grid(row=0, column=0, padx=(20,40), pady=10)
-    try:
-        diretorio_base = os.path.dirname(os.path.abspath(__file__))
-        caminho_img = os.path.join(diretorio_base, "imagens", "vendedor.png")
-        img_vend = ctk.CTkImage(light_image=Image.open(caminho_img), size=(200,200))
-        lbl_img = ctk.CTkLabel(frame_img, image=img_vend, text="")
-        lbl_img.pack()
-    except Exception:
-        lbl_img = ctk.CTkLabel(frame_img, text="(Imagem)", width=200, height=200)
-        lbl_img.pack()
+    form_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
+    form_frame.place(relx=0.5, rely=0.45, anchor="center")
 
-    frame_form = ctk.CTkFrame(frame_central, fg_color="transparent")
-    frame_form.grid(row=0, column=1, pady=10)
+    font_family = "Arial"
+    font_size = 15
 
-    entry_nome = ctk.CTkEntry(frame_form, placeholder_text="Nome", width=320)
-    entry_nome.grid(row=0, column=0, pady=8)
-    entry_cpf = ctk.CTkEntry(frame_form, placeholder_text="CPF", width=320)
-    entry_cpf.grid(row=1, column=0, pady=8)
-    entry_telefone = ctk.CTkEntry(frame_form, placeholder_text="Telefone", width=320)
-    entry_telefone.grid(row=2, column=0, pady=8)
-    entry_email = ctk.CTkEntry(frame_form, placeholder_text="Email", width=320)
-    entry_email.grid(row=3, column=0, pady=8)
+    # Nome
+    ctk.CTkLabel(
+        form_frame,
+        text="Nome",
+        font=(font_family, 16, "bold"),
+        text_color="#1976D2"
+    ).grid(row=0, column=0, sticky="w", pady=(0, 0), columnspan=2)
+    entry_nome = ctk.CTkEntry(
+        form_frame,
+        font=(font_family, font_size),
+        height=28,
+        width=350
+    )
+    entry_nome.grid(row=1, column=0, pady=(0, 6), sticky="ew", columnspan=2)
+
+    # CPF
+    ctk.CTkLabel(
+        form_frame,
+        text="CPF",
+        font=(font_family, 16, "bold"),
+        text_color="#1976D2"
+    ).grid(row=2, column=0, sticky="w", pady=(0, 0), columnspan=2)
+    entry_cpf = ctk.CTkEntry(
+        form_frame,
+        font=(font_family, font_size),
+        height=28,
+        width=350
+    )
+    entry_cpf.grid(row=3, column=0, pady=(0, 6), sticky="ew", columnspan=2)
+
+    # Telefone
+    ctk.CTkLabel(
+        form_frame,
+        text="Telefone",
+        font=(font_family, 16, "bold"),
+        text_color="#1976D2"
+    ).grid(row=4, column=0, sticky="w", pady=(0, 0), columnspan=2)
+    entry_telefone = ctk.CTkEntry(
+        form_frame,
+        font=(font_family, font_size),
+        height=28,
+        width=350
+    )
+    entry_telefone.grid(row=5, column=0, pady=(0, 6), sticky="ew", columnspan=2)
+
+    # Email
+    ctk.CTkLabel(
+        form_frame,
+        text="Email",
+        font=(font_family, 16, "bold"),
+        text_color="#1976D2"
+    ).grid(row=6, column=0, sticky="w", pady=(0, 0), columnspan=2)
+    entry_email = ctk.CTkEntry(
+        form_frame,
+        font=(font_family, font_size),
+        height=28,
+        width=350
+    )
+    entry_email.grid(row=7, column=0, pady=(0, 6), sticky="ew", columnspan=2)
 
     vendedor_id = None
     if dados:
         vendedor_id = dados.get("id")
+        entry_nome.delete(0, tk.END)
         entry_nome.insert(0, dados.get("nome", ""))
+        entry_cpf.delete(0, tk.END)
         entry_cpf.insert(0, dados.get("cpf", ""))
+        entry_telefone.delete(0, tk.END)
         entry_telefone.insert(0, dados.get("telefone", ""))
+        entry_email.delete(0, tk.END)
         entry_email.insert(0, dados.get("email", ""))
 
     def gravar():
@@ -103,10 +156,10 @@ def cadastro_vendedor(frame_conteudo, dados=None, on_show_small_logo=None, on_sh
     def limpar():
         nonlocal vendedor_id
         vendedor_id = None
-        entry_nome.delete(0, "end")
-        entry_cpf.delete(0, "end")
-        entry_telefone.delete(0, "end")
-        entry_email.delete(0, "end")
+        entry_nome.delete(0, tk.END)
+        entry_cpf.delete(0, tk.END)
+        entry_telefone.delete(0, tk.END)
+        entry_email.delete(0, tk.END)
 
     def sair():
         for widget in frame_conteudo.winfo_children():
@@ -117,20 +170,40 @@ def cadastro_vendedor(frame_conteudo, dados=None, on_show_small_logo=None, on_sh
             except Exception:
                 pass
 
-    frame_botoes = ctk.CTkFrame(frame_form, fg_color="transparent")
-    frame_botoes.grid(row=4, column=0, pady=(30, 10))
-    btn_gravar = ctk.CTkButton(frame_botoes, text="Gravar", width=120, command=gravar,
-                               fg_color="#2e8bff", hover_color="#1c5fb8")
-    btn_gravar.grid(row=0, column=0, padx=6)
-    btn_procurar = ctk.CTkButton(frame_botoes, text="Procurar", width=120, command=procurar,
-                                 fg_color="#2e8bff", hover_color="#1c5fb8")
-    btn_procurar.grid(row=0, column=1, padx=6)
-    btn_limpar = ctk.CTkButton(frame_botoes, text="Limpar", width=120, command=limpar,
-                               fg_color="#2e8bff", hover_color="#1c5fb8")
-    btn_limpar.grid(row=0, column=2, padx=6)
-    btn_sair = ctk.CTkButton(frame_botoes, text="Sair", width=120, command=sair,
-                             fg_color="red", hover_color="#cc0000")
-    btn_sair.grid(row=0, column=3, padx=6)
+    x_inicial = 120
+    espaco = 110 + 30
+
+    def pack_button(text, cmd, color, xpos, ypos=340, hover_color="#0b60c9", width=None, height=None):
+        btn = ctk.CTkButton(
+            main_frame,
+            text=text,
+            width=width if width is not None else 110,
+            height=height if height is not None else 28,
+            fg_color=color,
+            hover_color=hover_color,
+            font=("Arial", 15, "bold"),
+            command=cmd,
+        )
+        btn.place(x=xpos, y=ypos)
+
+    pack_button("Gravar", gravar, "#1976D2", x_inicial + 7, ypos=340)
+    pack_button("Procurar", procurar, "#1976D2", x_inicial + espaco + 7, ypos=340)
+    pack_button("Limpar", limpar, "#1976D2", x_inicial + espaco * 2 + 7, ypos=340)
+    pack_button("Sair", sair, "#E53935", x_inicial + espaco * 3 + 7, ypos=340, hover_color="#cc0000")
+
+    def capitalize_first_letter(event):
+        widget = event.widget
+        value = widget.get()
+        if value:
+            new_value = value[0].upper() + value[1:]
+            if value != new_value:
+                widget.delete(0, tk.END)
+                widget.insert(0, new_value)
+
+    entry_nome.bind("<KeyRelease>", capitalize_first_letter)
+    entry_cpf.bind("<KeyRelease>", capitalize_first_letter)
+    entry_telefone.bind("<KeyRelease>", capitalize_first_letter)
+    entry_email.bind("<KeyRelease>", capitalize_first_letter)
 
 def abrir_tela_procurar_vendedor(frame_conteudo, on_show_small_logo=None, on_show_big_logo=None):
     for widget in frame_conteudo.winfo_children():

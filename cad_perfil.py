@@ -16,20 +16,48 @@ def cadastro_perfil(frame_conteudo, dados=None, on_show_small_logo=None, on_show
     if callable(on_show_small_logo):
         try: on_show_small_logo()
         except: pass
-    frame_conteudo.grid_propagate(False)
-    frame_conteudo.configure(fg_color="#d9d9d9")
-    titulo = ctk.CTkLabel(frame_conteudo, text="Cadastro de Perfil", font=("Arial", 28, "bold"))
-    titulo.place(relx=0.5, rely=0.28, anchor="center")
-    frame_central = ctk.CTkFrame(frame_conteudo, fg_color="transparent")
-    frame_central.place(relx=0.5, rely=0.5, anchor="center")
-    frame_form = ctk.CTkFrame(frame_central, fg_color="transparent")
-    frame_form.pack()
-    entry_nome = ctk.CTkEntry(frame_form, placeholder_text="Nome do Perfil", width=320)
-    entry_nome.grid(row=0, column=0, pady=8)
+    frame_conteudo.configure(fg_color="#e1f1fd")
+
+    main_frame = ctk.CTkFrame(
+        frame_conteudo,
+        fg_color="#eaf6ff",
+        border_color="#1976d2",
+        border_width=2,
+        width=800,
+        height=350,
+    )
+    main_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+    ctk.CTkLabel(
+        main_frame,
+        text="Cadastro de Perfil",
+        font=("Arial", 28, "bold"),
+        text_color="#1976D2"
+    ).place(relx=0.5, y=40, anchor="center")
+
+    form_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
+    form_frame.place(relx=0.5, rely=0.45, anchor="center")
+
+    ctk.CTkLabel(
+        form_frame,
+        text="Nome do Perfil",
+        font=("Arial", 15, "bold"),
+        text_color="#1976D2"
+    ).grid(row=0, column=0, sticky="w", pady=(0,2))
+    entry_nome = ctk.CTkEntry(
+        form_frame,
+        placeholder_text="Nome do Perfil",
+        font=("Arial", 15),
+        height=28,
+        width=350
+    )
+    entry_nome.grid(row=1, column=0, pady=8)
+
     perfil_id = None
     if dados:
         perfil_id = dados.get("id")
         entry_nome.insert(0, dados["nome"])
+
     def gravar():
         nonlocal perfil_id
         nome = entry_nome.get().strip()
@@ -55,32 +83,42 @@ def cadastro_perfil(frame_conteudo, dados=None, on_show_small_logo=None, on_show
             messagebox.showerror("Erro", f"Erro ao gravar perfil:\n{e}")
         finally:
             if con: con.close()
+
     def procurar():
         abrir_tela_procurar_perfil(frame_conteudo, on_show_small_logo, on_show_big_logo)
+
     def limpar():
         nonlocal perfil_id
         perfil_id = None
         entry_nome.delete(0, "end")
+
     def sair():
         for widget in frame_conteudo.winfo_children():
             widget.destroy()
         if callable(on_show_big_logo):
             try: on_show_big_logo()
             except: pass
-    frame_botoes = ctk.CTkFrame(frame_form, fg_color="transparent")
-    frame_botoes.grid(row=1, column=0, pady=(30, 10))
-    btn_gravar = ctk.CTkButton(frame_botoes, text="Gravar", width=120, command=gravar,
-                               fg_color="#2e8bff", hover_color="#1c5fb8")
-    btn_gravar.grid(row=0, column=0, padx=6)
-    btn_procurar = ctk.CTkButton(frame_botoes, text="Procurar", width=120, command=procurar,
-                                 fg_color="#2e8bff", hover_color="#1c5fb8")
-    btn_procurar.grid(row=0, column=1, padx=6)
-    btn_limpar = ctk.CTkButton(frame_botoes, text="Limpar", width=120, command=limpar,
-                               fg_color="#2e8bff", hover_color="#1c5fb8")
-    btn_limpar.grid(row=0, column=2, padx=6)
-    btn_sair = ctk.CTkButton(frame_botoes, text="Sair", width=120, command=sair,
-                             fg_color="red", hover_color="#cc0000")
-    btn_sair.grid(row=0, column=3, padx=6)
+
+    x_inicial = 120
+    espaco = 110 + 30
+
+    def pack_button(text, cmd, color, xpos, ypos=220, hover_color="#0b60c9", width=None, height=None):
+        btn = ctk.CTkButton(
+            main_frame,
+            text=text,
+            width=width if width is not None else 110,
+            height=height if height is not None else 28,
+            fg_color=color,
+            hover_color=hover_color,
+            font=("Arial", 15, "bold"),
+            command=cmd,
+        )
+        btn.place(x=xpos, y=ypos)
+
+    pack_button("Gravar", gravar, "#1976D2", x_inicial + 7, ypos=220)
+    pack_button("Procurar", procurar, "#1976D2", x_inicial + espaco + 7, ypos=220)
+    pack_button("Limpar", limpar, "#1976D2", x_inicial + espaco * 2 + 7, ypos=220)
+    pack_button("Sair", sair, "#E53935", x_inicial + espaco * 3 + 7, ypos=220, hover_color="#cc0000")
 
 def abrir_tela_procurar_perfil(frame_conteudo, on_show_small_logo=None, on_show_big_logo=None):
     for widget in frame_conteudo.winfo_children():
@@ -156,3 +194,13 @@ def abrir_tela_procurar_perfil(frame_conteudo, on_show_small_logo=None, on_show_
                              command=lambda: cadastro_perfil(frame_conteudo, None, on_show_small_logo, on_show_big_logo),
                              fg_color="red", hover_color="#cc0000", width=120)
     btn_sair.grid(row=0, column=2, padx=10)
+
+def capitalize_first_letter(event):
+    widget = event.widget
+    value = widget.get()
+    if value:
+        # Só altera se a primeira letra não for maiúscula
+        new_value = value[0].upper() + value[1:]
+        if value != new_value:
+            widget.delete(0, tk.END)
+            widget.insert(0, new_value)
